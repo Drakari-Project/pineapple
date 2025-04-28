@@ -35,6 +35,7 @@ export async function POST({ request }) {
         const dev = data.get("dev");
         const collection = data.get("collection");
         const isStudentGame = data.get("isStudentGame");
+        const command = data.get("command");
 
         if (!password) {
             return json({ error: "Unauthorized: Password required" }, { status: 401 });
@@ -93,7 +94,7 @@ export async function POST({ request }) {
         </game>
        `.trim();
 
-       const jsonOutput = { name: name, collection: collection, isStudentGame: isStudentGame };
+       const jsonOutput = { name: name, collection: collection, isStudentGame: isStudentGame, command: command };
 
         // Define file path (adjust the directory as needed)
         const xmlFilePath = path.join(uploadDir, "saved.xml");
