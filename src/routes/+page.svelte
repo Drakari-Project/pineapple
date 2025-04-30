@@ -21,6 +21,8 @@
 
     let collections = $state([]);
 
+    let fileName = $state("");
+
     //Used to get list of collections from ES-DE
     onMount(async () => {
     try {
@@ -40,6 +42,7 @@
   
     function handleFileChange(event) {
       file = event.target.files[0];
+      fileName = file ? file.name : "";
     }
   
     async function uploadFile() {
@@ -85,6 +88,7 @@
         const data = await response.json();
         if (response.ok) {
           uploadedFileUrl = data.fileUrl;
+          alert("Game Uploaded" + " (" + name + ")");
         } else {
           alert("Upload failed: " + data.error);
         }
@@ -92,20 +96,7 @@
         console.error("Error uploading file:", error);
       }
     }
-    async function saveGame() {
-        try {
-          const response = await fetch("/savegame", {
-            method: "POST",
-            body: fromData,
-          });
-        const data = await response.json();
-        if (response.ok){
-          savedGame = "saved game";
-        }
-        } catch (error) {
-          console.error("Game save failed")
-        }
-    }
+   
   </script>
     <div class="container-fluid">
       <h1 class="title">
@@ -180,6 +171,9 @@
             onchange={handleFileChange}
           />
         </label>
+        {#if fileName}
+          <span class="file-name">{fileName}</span>
+        {/if}
         <br>
         <br>
         <input style="background-color: yellow;" type="password" bind:value={password} placeholder="Enter password" />
@@ -189,10 +183,6 @@
         <br>
       </div>  
     </div>
-
-  {#if uploadedFileUrl}
-    <p>Game uploaded successfully!</p>
-  {/if}
   
   <style>
     @import 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css';
