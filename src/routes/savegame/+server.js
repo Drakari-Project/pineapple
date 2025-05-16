@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { xml } from '@sveltejs/kit';
 import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 dotenv.config(); // Load environment variables from .env file
 
 const uploadPassword = process.env.UPLOAD_PASSWORD;
@@ -52,7 +51,7 @@ export async function POST({ request }) {
             return json({ error: "No student game bool sent" }, { status: 400 });
         }
 
-        if(!name) {
+        if(!gameName) {
             return json({ error: "No name sent" }, { status: 400 });
         }
       

@@ -1,0 +1,18 @@
+[Unit]
+Description=Drakari Game Uploader Front End
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/drakari/pineapple
+ExecStart=/usr/bin/npm run build -- --host
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/drakari/npm_stdout.log
+StandardError=append:/home/drakari/npm_stderr.log
+User=drakari
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+

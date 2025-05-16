@@ -142,7 +142,7 @@
         <br>
       
         <label>
-          gameName Of Game:
+          Name Of Game:
           <input type="text" style="background-color: yellow;" bind:value={gameName} placeholder="Snake"/>
         </label>
         
