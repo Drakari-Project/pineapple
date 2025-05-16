@@ -30,12 +30,14 @@ export async function POST({ request }) {
         //Extracting sent data
         const file = data.get("file");
         const password = data.get("password");
-        const name = data.get("name");
+        const gameName = data.get("gameName");
         const description = data.get("description");
         const dev = data.get("dev");
         const collection = data.get("collection");
         const isStudentGame = data.get("isStudentGame");
         const command = data.get("command");
+        const studentGameEngine = data.get("studentGameEngine")
+        const exeName = data.get("exeName")
 
         if (!password) {
             return json({ error: "Unauthorized: Password required" }, { status: 401 });
@@ -82,29 +84,17 @@ export async function POST({ request }) {
 
         if(!isZip) {
             return json({error: "Uploaded file is not a zip archive!"}, {status: 400});
-        }
-        
-        const xmlOutput = `
-        <?xml version="1.0" encoding="UTF-8"?>
-        <game>
-          <path></path>
-          <name>${name}</name>
-          <desc>${description}</desc>
-          <developer>${dev}</developer>
-        </game>
-       `.trim();
+        }    
 
-       const jsonOutput = { name: name, collection: collection, isStudentGame: isStudentGame, command: command };
+       const jsonOutput = { gameName: gameName, collection: collection, isStudentGame: isStudentGame, studentGameEngine: studentGameEngine, command: command, exeName: exeName, desc: description, dev: dev};
 
         // Define file path (adjust the directory as needed)
-        const xmlFilePath = path.join(uploadDir, "saved.xml");
 
-        const jsonFilePath = path.join(uploadDir, "collection.json");
+        const jsonFilePath = path.join(uploadDir, "banana_config.json");
 
         // Save the XML file to disk
-        await writeFile(xmlFilePath, xmlOutput, 'utf-8');
 
-        await writeFile(jsonFilePath, JSON.stringify(jsonOutput), 'utf-8');
+        fs.writeFileSync(jsonFilePath, JSON.stringify(jsonOutput, null, 2), 'utf-8');
 
         fs.writeFileSync(gameFilePath, buffer);
 

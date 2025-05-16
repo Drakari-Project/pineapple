@@ -14,10 +14,18 @@
     let selectedCollection = $state("");
     let newCollection = $state("");
     //Game information
-    let name = $state("");
+    let gameName = $state("");
     let description = $state("");
     let dev = $state("");
-    let isStudentGame = $state(null);
+    let exeName = $state("");
+    let StudentGame = 
+    $state({
+        is: null, 
+        gameEngine: null, 
+        clicked: null
+      });
+
+    let command;
 
     let collections = $state([]);
 
@@ -33,6 +41,7 @@
       console.error("Error fetching collections:", error);
     }
   });
+  
   function addCollection() {
     if (newCollection.trim() !== "") {
       collections = [...collections, newCollection.trim()]; // Add new item to the array
@@ -47,7 +56,7 @@
   
     async function uploadFile() {
 
-      if(!name)
+      if(!gameName)
       {
         alert("No Name set!");
         return;
@@ -68,16 +77,25 @@
         alert("Please enter the password!");
         return;
       }
-  
+      
+      if(StudentGame.is == true)
+      {
+        command = 1
+      } else {
+        command = 2
+      }
+
       const formData = new FormData();
-      formData.append("name", name); //Name of game
+      formData.append("gameName", gameName); //Name of game
       formData.append("description", description);
       formData.append("dev", dev);
       formData.append("collection", selectedCollection);
-      formData.append("isStudentGame", isStudentGame);
+      formData.append("isStudentGame", StudentGame.is);
+      formData.append("studentGameEngine", StudentGame.gameEngine);
       formData.append("file", file); //game file
       formData.append("password", password); // Send password with request
-      formData.append("command", 1) //Hard set 1 currently for save game
+      formData.append("command", command) //
+      formData.append("exeName", exeName)
 
       try {
         const response = await fetch("/savegame", {
@@ -88,7 +106,7 @@
         const data = await response.json();
         if (response.ok) {
           uploadedFileUrl = data.fileUrl;
-          alert("Game Uploaded" + " (" + name + ")");
+          alert("Game Uploaded" + " (" + gameName + ")");
         } else {
           alert("Upload failed: " + data.error);
         }
@@ -96,7 +114,10 @@
         console.error("Error uploading file:", error);
       }
     }
-   
+   function changeStudentGameState(stateToChangeTo) {
+    StudentGame.is = stateToChangeTo
+    StudentGame.clicked = true
+   }
   </script>
     <div class="container-fluid">
       <h1 class="title">
@@ -108,21 +129,21 @@
       <div class="position-absolute top-50 start-50" style="background-color: green; outline-style: solid; outline-color: white; color: white;">
           Is a student game?
         <label>
-          <input type="radio" bind:group={isStudentGame} value={"true"} />
+          <input type="radio" onchange={() => changeStudentGameState(true)} bind:group={StudentGame.is} value={true} />
           true
         </label>
         <label>
-          <input type="radio" bind:group={isStudentGame} value={"false"} />
+          <input type="radio" onchange={() => changeStudentGameState(false)} bind:group={StudentGame.is} value={false}  />
           false
         </label>
-        {#if isStudentGame}
+        {#if StudentGame.clicked}
         
         <br>
         <br>
       
         <label>
-          Name Of Game:
-          <input type="text" style="background-color: yellow;" bind:value={name} placeholder="Snake"/>
+          gameName Of Game:
+          <input type="text" style="background-color: yellow;" bind:value={gameName} placeholder="Snake"/>
         </label>
         
         <br>
@@ -138,9 +159,42 @@
           Developer:
           <input type="text" style="background-color: yellow;" bind:value={dev} placeholder="You"/>
         </label>
-      
-        <br>
         
+        <br>
+        {#if StudentGame.is}
+        Game Engine
+        <label>
+          <input type="radio" bind:group={StudentGame.gameEngine} value={"java"} />
+          Java
+        </label>
+
+        <label>
+          <input type="radio" bind:group={StudentGame.gameEngine} value={"code.org"} />
+          Code.org
+        </label>
+        
+        <label>
+          <input type="radio" bind:group={StudentGame.gameEngine} value={"native"} />
+          Native
+        </label>
+        {#if StudentGame.gameEngine === "java"}
+        <br>
+           <label>
+            executable:
+             <input type="text" style="background-color: yellow;" bind:value={exeName} placeholder="something.jar"/>
+          </label>
+        {/if}
+
+        {#if StudentGame.gameEngine === "native"}
+        <br>
+          <label>
+            executable:
+            <input type="text" style="background-color: yellow;" bind:value={exeName} placeholder="something"/>
+          </label>
+        {/if}
+
+        <br>
+        {/if}
         <label>
           Select a Collection
           <select style="background-color: #c3c900;" bind:value={selectedCollection}>
