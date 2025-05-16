@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 // Set the directory you want to read
-const DIRECTORY_PATH = "/Users/rocketliam/ROMs";
+const DIRECTORY_PATH = "/home/drakari/roms";
 
 export async function GET() {
   try {
