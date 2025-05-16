@@ -1,7 +1,10 @@
 {
-  "name": "Cave Heart",
+  "gameName": "Jef",
   "collection": "2024",
   "isStudentGame": "true",
   "studentGameEngine": "code.org",
-  "command": "1"
+  "command": "1",
+  "exeName": "",
+  "desc": "jyhfdjyftyeh",
+  "dev": "me"
 }
